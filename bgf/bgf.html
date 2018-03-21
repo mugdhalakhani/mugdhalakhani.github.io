@@ -1,0 +1,23 @@
+<html>
+<body>
+<script>
+function BgfEnabed() {return !!BackgroundFetchRegistration;}
+
+function doFetch(bgManager) {
+	bgManager.getIds().then((ids) => {console.log('getIds returns ', ids)});
+	bgManager.fetch('id6', ['spotbonus_certificate.pdf','tofetch.txt'], {})
+  .then((bgf_registration) => {
+    console.log(bgf_registration);
+    bgf_registration.onprogress = e => {console.log(e, 'progress!! ', bgf_registration.downloaded)}
+  });
+}
+
+navigator.serviceWorker.register('bgf_handler.js')
+	.then((registration) => {
+  	console.log(registration, 'registration successful');
+    bgManager = registration.backgroundFetch;
+    doFetch(bgManager);
+  });
+</script>
+</body>
+</html>
