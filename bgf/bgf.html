@@ -28,9 +28,9 @@ function doFetch(bgManager) {
             type: 'image/png'
           },
       ],
-      title: 'Fetching Domokun'
+      title: 'Fetching files'
     };
-	bgManager.fetch('id6', ['domokun.jpg'], options)
+	bgManager.fetch('id6', ['domokun.jpg', '../resources/files/Pride_and_Prejudice.pdf', '..resources/files/The_Jungle_Book.pdf'], options)
   .then((bgf_registration) => {
     console.log(bgf_registration);
     bgf_registration.onprogress = e => {console.log(e, 'progress!! ', bgf_registration.downloaded)}
