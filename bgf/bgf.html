@@ -31,7 +31,7 @@ function doFetch(bgManager) {
       title: 'Fetching files',
       downloadTotal: 13458385
     };
-	bgManager.fetch('id6', ['domokun.jpg', '../resources/files/Pride_and_Prejudice.pdf'], options)
+	bgManager.fetch('id7', ['domokun.jpg', '../resources/files/Pride_and_Prejudice.pdf'], options)
   .then((bgf_registration) => {
     console.log(bgf_registration);
     bgf_registration.onprogress = e => {console.log(e, 'progress!! ', bgf_registration.downloaded)}
