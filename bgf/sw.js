@@ -74,7 +74,7 @@ function handleBackgroundFetchEvent(eventName, event) {
       fetches.forEach(fetch => promii.push(extractResponse(fetch)));
       promii.push(event.updateUI({
         title: 'Updated Title!',
-        icons: [{'src': '/bgf/resources/icon2.png', sizes: '128x128', type: 'image/png', purpose: 'any'}],
+        icons: [{'src': 'resources/icon2.png', sizes: '128x128', type: 'image/png', purpose: 'any'}],
       }));
 
       var id = event.id || event.tag;
