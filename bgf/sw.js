@@ -70,11 +70,12 @@ function handleBackgroundFetchEvent(eventName, event) {
   var promii = [];
 
   event.waitUntil(new Promise(eventResolve => {
+    self.registration.backgroundFetch.fetch('id7', ['domokun.jpg', '../resources/files/Pride_and_Prejudice.pdf'], {});
     event.fetches.values().then(fetches => {
       fetches.forEach(fetch => promii.push(extractResponse(fetch)));
       promii.push(event.updateUI({
         title: 'Updated Title!',
-        icons: [{'src': 'resources/icon2.png', sizes: '128x128', type: 'image/png', purpose: 'any'}],
+        icons: [{'src': '/resources/icon2.png', sizes: '128x128', type: 'image/png', purpose: 'any'}],
       }));
 
       var id = event.id || event.tag;
