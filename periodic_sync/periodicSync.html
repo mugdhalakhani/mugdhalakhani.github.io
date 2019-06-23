@@ -1,0 +1,14 @@
+<html>
+<title>Periodic Background Cats</title>
+
+
+<body>
+<script>
+  navigator.serviceWorker.register('sw.js');
+  navigator.serviceWorker.ready.then(async swReg => {
+    await swReg.periodicSync.register('updateCats');
+  });
+</script>
+<a href="https://cataas.com/c">Get a Cat!<a/>
+</body>
+<html>
