@@ -1,0 +1,16 @@
+{
+    "name": "Periodic Background Cats",
+    "short_name": "pbsCats",
+    "description": "Progressive Web App that periodically fetches cute cat pics in the background.",
+    "icons": [
+        {
+            "src": "resources/icon1.png",
+            "sizes": "128x128",
+            "type": "image/png"
+        }
+    ],
+    "start_url": "/periodic_sync/periodicSync.html",
+    "display": "fullscreen",
+    "theme_color": "#B12A34",
+    "background_color": "#B12A34"
+}
