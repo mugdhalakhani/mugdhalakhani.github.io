@@ -2,10 +2,27 @@
 <html>
   <head>
     <title> Web Platform API Demos</title>
+    <link rel="shortcut icon" href="resources/icons/cat-icon.png">
     <link rel="manifest" href="webapidemos.webmanifest">
+
+    <!-- iOS doesn't support web app manifest yet. Add iOS meta tags and icons -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Web Platform APIs Demo PWA">
+    <link rel="apple-touch-icon" href="resources/icons/cat-icon.png">
   </head>
   <body>
     <A HREF = "bgf/bgf_nuanced.html">Try out Background Fetch!</A> <br>
-    <A HREF = "periodic_sync/periodicSync.html">Try out Periodic Background Sync</A>
+    <A HREF = "periodic_sync/periodicSync.html">Try out Periodic Background Sync!</A>
   </body>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js', { scope: location.pathname })
+            .then(reg => {
+              console.log('Service worker registered.', reg);
+            });
+      });
+    }
+  </script>
 </html>

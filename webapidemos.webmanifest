@@ -4,10 +4,20 @@
     "description": "Progressive Web App used to demo various web platform APIs",
     "icons": [
         {
-            "src": "resources/icon1.png",
+            "src": "resources/icons/cat-icon.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        },
+        {
+            "src": "resources/icons/13.png",
             "sizes": "128x128",
             "type": "image/png"
         },
+        {
+            "src": "resources/icons/18.png",
+            "sizes": "3333x5320",
+            "type": "image/png"
+        }
     ],
     "start_url": "/index.html",
     "display": "fullscreen",
