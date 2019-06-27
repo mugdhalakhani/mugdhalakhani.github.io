@@ -1,0 +1,14 @@
+body {
+  background-color:powderblue;
+}
+
+#parent {
+  display: table;
+}
+
+#child {
+  line-height: 50px;
+  display: table-cell;
+  vertical-align: middle;
+  font-size: x-large;
+}
