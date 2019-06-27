@@ -5,15 +5,6 @@
 </head>
 
 <body>
-  <script>
-    function getDateTime() {
-      const today = new Date();
-      const date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-      const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-      return dateTime = date+' '+time;
-    }
-</script>
-
   <div class="header">
    <h1> Periodic Background Cats </h1>
   </div>
@@ -21,31 +12,45 @@
   <div class="row"> 
     <div class="column">
       <figure id="cat1">
-        <img src="https://cataas.com/c?nocache=<?php echo time(); ?>" style="width:100%">
-        <figcaption> Updated at <span id="caption1"><script> document.write(getDateTime()); </script></span> </figcaption>
+        <img src="" class="cat-image" style="width:100%">
+        <figcaption> <div> Updated at: <span class="cat-image-caption"></span><div></figcaption>
       </figure>
-      <figure id="cat2">
-        <img src="https://cataas.com/c?nocache=<?php echo time(); ?>+1" style="width:100%">
-        <figcaption> Updated at <span id="caption2"><script> document.write(getDateTime()); </script></span></figcaption>
-      </figure>
-   </div>
-    <div class="column">
-      <figure id="cat3">
-        <img src="https://cataas.com/c?nocache=<?php echo time(); ?>+2" style="width:100%">
-        <figcaption> Updated at <span id="caption3"><script> document.write(getDateTime()); </script></span></figcaption>
-      </figure>
-      <figure id="cat4">
-        <img src="https://cataas.com/c" style="width:100%">
-        <img src="https://cataas.com/c?nocache=<?php echo time(); ?>+3" style="width:100%">
-        <figcaption> Updated at <span id="caption4"><script> document.write(getDateTime()); </script></span></figcaption>
-      </figure>
-   </div>
   </div>
 
 <script>
-  navigator.serviceWorker.register('sw.js');
-  navigator.serviceWorker.ready.then(async swReg => {
-    await swReg.periodicSync.register('updateCats');
+  navigator.serviceWorker.register('periodicSync_sw.js');
+
+  navigator.serviceWorker.ready.then(() => {
+    console.log('SW registered');
+    const catImage = document.querySelector('.cat-image');
+ 
+    fetch("/getACat", {cache: "no-store"})
+      .then(response => {
+        return response.blob();
+      })
+      .then(theBlob => {
+        const objectUrl = URL.createObjectURL(theBlob);
+        catImage.src = objectUrl;
+      })
+      .catch(() => {
+        console.log('Could not fetch');
+      });
+    
+    fetch("/getTimeStamp", {cache: "no-store"})
+      .then(async (response) => {
+        const responseText = await response.text();
+        console.log('response is ' + responseText);
+        const catImageCaption = document.querySelector('.cat-image-caption');
+        console.log('found spanToUpdate? ' + catImageCaption);
+        catImageCaption.textContent = responseText;
+      })
+      .catch(() => {
+        console.log('Could not fetch');
+      });
+  });
+
+  navigator.serviceWorker.addEventListener('message', event => {
+    console.log(event.data.msg, event.data.url);
   });
 </script>
 </body>

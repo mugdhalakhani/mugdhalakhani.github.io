@@ -5,6 +5,7 @@ const FILES_TO_CACHE = [
 ];
 
 self.addEventListener('install', event => {
+  console.log("sw.js installed");
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
       console.log('[ServiceWorker] Pre-caching offline page');
@@ -14,6 +15,7 @@ self.addEventListener('install', event => {
 });
 
 self.addEventListener('activate', event => {
+  console.log("sw.js activated");
   event.waitUntil(
     caches.keys().then(keyList => {
       return Promise.all(keyList.map(key => {
