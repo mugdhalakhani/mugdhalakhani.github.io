@@ -20,9 +20,11 @@ self.addEventListener('activate', event => {
 function getCurrentDateTime() {
   const today = new Date();
   const date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-  const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+  const time = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
   return dateTime = date+' '+time;
 }
+
+const catUrl = 'https://cataas.com/c';
 
 self.addEventListener('periodicsync', event => {
   console.log('Periodic Sync received for ' + event.tag);
@@ -31,10 +33,11 @@ self.addEventListener('periodicsync', event => {
 self.addEventListener('fetch', event => {
   console.log('Intercepting fetch for ' + event.request.url);
 
-  if (event.request.url.endsWith('getACat')) {
-    event.respondWith(fetch("https://cataas.com/c", { cache: "no-store" }).then(
+  if (event.request.url.endsWith('cataas.com/c')) {
+    console.log('A cat has been requested');
+    event.respondWith(fetch(catUrl, { cache: 'no-cache' }).then(
       response => { return response; }));
-  } else if (event.request.url.endsWith('/getTimeStamp')) {
+  } else  if (event.request.url.endsWith('/getTimeStamp')) {
     const init = {
       status: 200,
       statusText: "OK",

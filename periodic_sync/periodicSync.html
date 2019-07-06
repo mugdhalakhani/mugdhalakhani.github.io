@@ -9,33 +9,27 @@
    <h1> Periodic Background Cats </h1>
   </div>
 
-  <div class="row"> 
-    <div class="column">
-      <figure id="cat1">
-        <img src="" class="cat-image" style="width:100%">
-        <figcaption> <div> Updated at: <span class="cat-image-caption"></span><div></figcaption>
-      </figure>
-  </div>
+  <input type="image" src="resources/icons/18.png" class="cat-image" alt="cat picture" style="width:100%" onclick="getACat();">
+  <figcaption> <div> Updated at: <span class="cat-image-caption"></span><div></figcaption>
 
 <script>
-  navigator.serviceWorker.register('periodicSync_sw.js');
-
-  navigator.serviceWorker.ready.then(() => {
-    console.log('SW registered');
+  function getCatImage() {
     const catImage = document.querySelector('.cat-image');
- 
-    fetch("/getACat", {cache: "no-store"})
+    fetch('https://cataas.com/c', { cache: 'no-store'})
       .then(response => {
         return response.blob();
       })
       .then(theBlob => {
         const objectUrl = URL.createObjectURL(theBlob);
+        console.log('created objecturl as ' + objectUrl);
         catImage.src = objectUrl;
       })
       .catch(() => {
         console.log('Could not fetch');
       });
-    
+  }
+
+  function getTimeStamp() {
     fetch("/getTimeStamp", {cache: "no-store"})
       .then(async (response) => {
         const responseText = await response.text();
@@ -47,8 +41,20 @@
       .catch(() => {
         console.log('Could not fetch');
       });
-  });
+  }
 
+  function getACat() {
+    navigator.serviceWorker.ready.then(() => {
+      console.log('SW registered');
+      getCatImage();
+      getTimeStamp();
+    });
+  }
+
+window.onload = () => {
+    console.log('registering SW');
+    navigator.serviceWorker.register('periodicSync_sw.js');
+  }
   navigator.serviceWorker.addEventListener('message', event => {
     console.log(event.data.msg, event.data.url);
   });
