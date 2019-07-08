@@ -35,7 +35,7 @@ self.addEventListener('fetch', event => {
 
   if (event.request.url.endsWith('cataas.com/c')) {
     console.log('A cat has been requested');
-    event.respondWith(fetch(catUrl, { cache: 'no-cache' }).then(
+    event.respondWith(fetch(catUrl, { cache: 'no-store' }).then(
       response => { return response; }));
   } else  if (event.request.url.endsWith('/getTimeStamp')) {
     const init = {

@@ -51,10 +51,11 @@
     });
   }
 
-window.onload = () => {
+  window.onload = () => {
     console.log('registering SW');
     navigator.serviceWorker.register('periodicSync_sw.js');
   }
+
   navigator.serviceWorker.addEventListener('message', event => {
     console.log(event.data.msg, event.data.url);
   });
