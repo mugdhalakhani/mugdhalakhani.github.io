@@ -1,4 +1,4 @@
-<html>
+<html lang="en">
 <head>
   <title>Periodic Background Cats</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -52,7 +52,7 @@
   const minIntervalFromForm = document.querySelector('#minInterval');
 
   toggleSync.addEventListener('click', () => {
-
+    toggleSync.classList.toggle('active');
     navigator.serviceWorker.ready.then(registration => {
       console.log('minInterval being passed is ' + minIntervalFromForm.valueAsNumber);
       registration.periodicSync.register('get-cats', {
