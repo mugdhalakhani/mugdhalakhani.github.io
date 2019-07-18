@@ -17,7 +17,7 @@
       <div class="catainer">
         <img class="cat-image" src="../resources/icons/15.jpg">
       </div>
-      <figcaption>Click on the cat image anytime to get another.</figcaption>
+      <figcaption>Click on the image to get a cached cat.</figcaption>
     </figure>
 
     <div class="controls">
@@ -26,6 +26,9 @@
         <button id="toggle-sync">Periodic Sync</button>
       </div>
       <div class="bottom-line">
+        <div class="manual-sync-container">
+          <button id="manual-sync">Sync Manually</button>
+        </div>
         <div class="cancel-sync-container">
           <button id="cancel-sync">Cancel Sync</button>
         </div>
@@ -38,13 +41,47 @@
     <p class="next-cat-update">Never</p>
   </footer>
 
+  <script src='utils.js'></script>
   <script>
   const catImage = document.querySelector('.cat-image');
   const lastCatUpdate = document.querySelector('.last-cat-update');
+  const nextCatUpdate = document.querySelector('.next-cat-update');
   const toggleSync = document.querySelector('#toggle-sync');
+  const cancelSync = document.querySelector('#cancel-sync');
+  const manualSync = document.querySelector('#manual-sync');
+  const minIntervalFromForm = document.querySelector('#minInterval');
 
   toggleSync.addEventListener('click', () => {
-    toggleSync.classList.toggle('active');
+
+    navigator.serviceWorker.ready.then(registration => {
+      console.log('minInterval being passed is ' + minIntervalFromForm.valueAsNumber);
+      registration.periodicSync.register('get-cats', {
+        minInterval: minIntervalFromForm.valueAsNumber
+      });
+    });
+
+    nextCatUpdate.textContent = "Periodic";
+  });
+
+  cancelSync.addEventListener('click', () => {
+    navigator.serviceWorker.ready.then(registration => {
+      registration.periodicSync.unregister('get-cats');
+    });
+
+    nextCatUpdate.textContent = "Manual";
+  });
+
+  manualSync.addEventListener('click', async () => {
+    if (gettingCat) {
+      return;
+    }
+    gettingCat = true;
+    await updateCatAndTimestamp();
+    const url = await getCatImage();
+    console.log(`Created objecturl as ${url}`);
+    catImage.src = url;
+    lastCatUpdate.textContent = await getTimeStamp();
+    gettingCat = false;
   });
 
   let gettingCat = false;
@@ -63,23 +100,25 @@
   async function getCatImage() {
     try {
       await navigator.serviceWorker.ready;
-      const response = await fetch('https://cataas.com/c', { cache: 'no-store'});
-      const blob = await response.blob();
+      const cache = await caches.open('cat-images');
+      const imgResponse = await caches.match('catImage');
+      const blob = await imgResponse.blob();
       return URL.createObjectURL(blob);
     } catch (e) {
-      console.log('Could not fetch');
+      console.log('Could not get from cache ' + e);
     }
   }
 
-
   async function getTimeStamp() {
     try {
-      const response = await fetch("/getTimeStamp", {cache: 'no-store'});
-      const responseText = await response.text();
-      console.log('response is ' + responseText);
-      return responseText;
-    } catch(e) {
-        console.log('Could not fetch');
+      await navigator.serviceWorker.ready;
+      const cache = await caches.open('cat-images');
+      const timeResponse = await caches.match('lastUpdateTime');
+      const lastUpdateTime = await timeResponse.text();
+      console.log('lastUpdateTime is ' + lastUpdateTime);
+      return lastUpdateTime;
+    } catch (e) {
+      console.log('Could not get from cache ' + e);
     }
   }
 
