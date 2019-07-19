@@ -1,3 +1,5 @@
+const CACHE_NAME = 'cat-images';
+
 self.importScripts('utils.js');
 
 // Posts |msg| to background_fetch.js.
@@ -8,15 +10,15 @@ function postToWindowClients(msg) {
 }
 
 self.addEventListener('install', event => {
-  console.log('I am installed');
+  console.log('periodicSync_sw installed');
   postToWindowClients('installed');
-  event.waitUntil(updateCatAndTimestamp());
+
 });
 
 self.addEventListener('activate', event => {
-  console.log('I am loaded');
-  postToWindowClients('Activated!');
-  event.waitUntil(skipWaiting());
+  console.log("sw.js activated");
+  event.waitUntil(
+  updateCatAndTimestamp());
 });
 
 self.addEventListener('periodicsync', async event => {

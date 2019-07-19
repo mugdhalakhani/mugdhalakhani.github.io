@@ -54,10 +54,15 @@
   toggleSync.addEventListener('click', () => {
     toggleSync.classList.toggle('active');
     navigator.serviceWorker.ready.then(registration => {
-      console.log('minInterval being passed is ' + minIntervalFromForm.valueAsNumber);
-      registration.periodicSync.register('get-cats', {
-        minInterval: minIntervalFromForm.valueAsNumber
-      });
+      try {
+        console.log('minInterval being passed is ' + minIntervalFromForm.valueAsNumber);
+        registration.periodicSync.register('get-cats', {
+          minInterval: minIntervalFromForm.valueAsNumber
+        });
+      } catch (e) {
+        console.log('Could not register periodic Sync!' + e);
+        window.alert('Could not register periodic Sync!' + e);
+      }
     });
 
     nextCatUpdate.textContent = "Periodic";
@@ -69,6 +74,8 @@
     });
 
     nextCatUpdate.textContent = "Manual";
+    if (toggleSync.classList.contains('active'))
+      toggleSync.classList.toggle('active');
   });
 
   manualSync.addEventListener('click', async () => {
@@ -122,9 +129,29 @@
     }
   }
 
+  function disableToggleSync() {
+    toggleSync.disabled = true;
+  }
+
+  async function updateControls() {
+    try {
+      const registration = await navigator.serviceWorker.ready;
+      if (registration.periodicSync === undefined)
+        disableToggleSync();
+      else {
+        tags = await registration.periodicSync.getTags();
+        if (tags.includes('get-cats'))
+          toggleSync.classList.toggle('active');
+      }
+    } catch (e) {
+      console.log('Could not update controls ' + e);
+    }
+  }
+
   window.onload = () => {
     console.log('registering SW');
     navigator.serviceWorker.register('periodicSync_sw.js');
+    updateControls();
   }
 
   navigator.serviceWorker.addEventListener('message', event => {
