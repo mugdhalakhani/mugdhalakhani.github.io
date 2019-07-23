@@ -3,15 +3,19 @@ const CACHE_NAME = 'cat-images';
 self.importScripts('utils.js');
 
 // Posts |msg| to background_fetch.js.
-function postToWindowClients(msg) {
-  return clients.matchAll({ type: 'window' , includeUncontrolled: true }).then(clientWindows => {
-    for (const client of clientWindows) client.postMessage(msg);
+function sendMessageToClients(type, data) {
+  clients.matchAll({ includeUncontrolled: true }).then((clients) => {
+    clients.forEach((client) => {
+      client.postMessage({type, data});
+    });
+  }, (error) => {
+    console.log(error);
   });
 }
 
 self.addEventListener('install', event => {
   console.log('periodicSync_sw installed');
-  postToWindowClients('installed');
+  sendMessageToClients('register', 'ServiceWorker installed!');
 
 });
 
@@ -19,6 +23,7 @@ self.addEventListener('activate', event => {
   console.log("sw.js activated");
   event.waitUntil(
   updateCatAndTimestamp());
+  sendMessageToClients('cache-updated', 'Updated the cache upon activation');
 });
 
 self.addEventListener('periodicsync', async event => {
@@ -26,5 +31,6 @@ self.addEventListener('periodicsync', async event => {
   event.waitUntil(async () => {
     if (event.tag === 'get-cats')
       await updateCatAndTimestamp();
-  });
+      sendMessageToClients('cache-updated', 'Updated the cache upon receiving periodicsync');
+    });
 });

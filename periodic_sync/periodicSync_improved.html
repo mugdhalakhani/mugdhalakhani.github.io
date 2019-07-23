@@ -50,9 +50,13 @@
   const cancelSync = document.querySelector('#cancel-sync');
   const manualSync = document.querySelector('#manual-sync');
   const minIntervalFromForm = document.querySelector('#minInterval');
-
+  let gettingCat = false;
+  
   toggleSync.addEventListener('click', () => {
-    toggleSync.classList.toggle('active');
+    // Only change 'Start' to 'Update' if we haven't done it yet.
+    if (!toggleSync.classList.contains('active'))
+      toggleSync.classList.toggle('active');
+
     navigator.serviceWorker.ready.then(registration => {
       try {
         console.log('minInterval being passed is ' + minIntervalFromForm.valueAsNumber);
@@ -61,7 +65,7 @@
         });
       } catch (e) {
         console.log('Could not register periodic Sync!' + e);
-        window.alert('Could not register periodic Sync!' + e);
+        window.alert('Could not register periodic Sync! Have you enabled the feature?');
       }
     });
 
@@ -77,30 +81,27 @@
     if (toggleSync.classList.contains('active'))
       toggleSync.classList.toggle('active');
   });
-
+  
   manualSync.addEventListener('click', async () => {
     if (gettingCat) {
+      console.log('Already fetching a cat');
       return;
     }
     gettingCat = true;
     await updateCatAndTimestamp();
-    const url = await getCatImage();
-    console.log(`Created objecturl as ${url}`);
-    catImage.src = url;
-    lastCatUpdate.textContent = await getTimeStamp();
+    await refreshCatImageFromCache();
     gettingCat = false;
   });
-
-  let gettingCat = false;
+  
   catImage.addEventListener('click', async () => {
+    console.log('User clicked on the cat image. Will refresh from cache');
     if (gettingCat) {
+      console.log('Already fetching a cat');
       return;
     }
+  
     gettingCat = true;
-    const url = await getCatImage();
-    console.log(`Created objecturl as ${url}`);
-    catImage.src = url;
-    lastCatUpdate.textContent = await getTimeStamp();
+    await refreshCatImageFromCache();
     gettingCat = false;
   });
 
@@ -129,23 +130,22 @@
     }
   }
 
-  function disableToggleSync() {
-    toggleSync.disabled = true;
-  }
-
   async function updateControls() {
     try {
       const registration = await navigator.serviceWorker.ready;
-      if (registration.periodicSync === undefined)
-        disableToggleSync();
-      else {
         tags = await registration.periodicSync.getTags();
         if (tags.includes('get-cats'))
           toggleSync.classList.toggle('active');
-      }
     } catch (e) {
       console.log('Could not update controls ' + e);
     }
+  }
+
+  async function refreshCatImageFromCache() {
+    const url = await getCatImage();
+    console.log(`Created objecturl as ${url}`);
+    catImage.src = url;
+    lastCatUpdate.textContent = await getTimeStamp();
   }
 
   window.onload = () => {
@@ -154,8 +154,19 @@
     updateControls();
   }
 
-  navigator.serviceWorker.addEventListener('message', event => {
-    console.log(event.data.msg, event.data.url);
+  navigator.serviceWorker.addEventListener('message', async event => {
+    const message = event.data;
+    console.log('Message from the service worker: ' + message.type + ': ' + message.data);
+    if (message.type == 'cache-updated') {
+      if (gettingCat) {
+        console.log('Already fetching a cat');
+        return;
+      }
+    
+      gettingCat = true;
+      await refreshCatImageFromCache();
+      gettingCat = false;
+    }
   });
 </script>
 </body>
