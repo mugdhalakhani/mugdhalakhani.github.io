@@ -53,16 +53,13 @@
   let gettingCat = false;
   
   toggleSync.addEventListener('click', () => {
-    // Only change 'Start' to 'Update' if we haven't done it yet.
-    if (!toggleSync.classList.contains('active'))
-      toggleSync.classList.toggle('active');
-
     navigator.serviceWorker.ready.then(registration => {
       try {
         console.log('minInterval being passed is ' + minIntervalFromForm.valueAsNumber);
-        registration.periodicSync.register('get-cats', {
-          minInterval: minIntervalFromForm.valueAsNumber
-        });
+        registration.periodicSync.register('get-cats', { minInterval: minIntervalFromForm.valueAsNumber });
+        // Only change 'Start' to 'Update' if we haven't done it yet.
+        if (!toggleSync.classList.contains('active'))
+          toggleSync.classList.toggle('active');
       } catch (e) {
         console.log('Could not register periodic Sync!' + e);
         window.alert('Could not register periodic Sync! Have you enabled the feature?');
@@ -133,9 +130,13 @@
   async function updateControls() {
     try {
       const registration = await navigator.serviceWorker.ready;
-        tags = await registration.periodicSync.getTags();
-        if (tags.includes('get-cats'))
-          toggleSync.classList.toggle('active');
+      await refreshCatImageFromCache();
+      tags = await registration.periodicSync.getTags();
+      if (tags.includes('get-cats')) {
+        toggleSync.classList.toggle('active');
+        nextCatUpdate.textContent = 'Periodic';
+      }
+
     } catch (e) {
       console.log('Could not update controls ' + e);
     }
