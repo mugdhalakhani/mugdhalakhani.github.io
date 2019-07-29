@@ -158,7 +158,7 @@
   navigator.serviceWorker.addEventListener('message', async event => {
     const message = event.data;
     console.log('Message from the service worker: ' + message.type + ': ' + message.data);
-    if (message.type == 'cache-updated') {
+    if (message.type === 'cache-updated') {
       if (gettingCat) {
         console.log('Already fetching a cat');
         return;
