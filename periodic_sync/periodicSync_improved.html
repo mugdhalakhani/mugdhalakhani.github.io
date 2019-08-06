@@ -2,7 +2,7 @@
 <head>
   <title>Periodic Background Cats</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="origin-trial" content="AkeIEpiEDrr675VSzepeoDtzJXuC7NVje0aeQ/QV+LBjG/xXO1OSHq7+5wNA3zOBvDYqWeAuhwmlV+KMbN8UtQwAAAB2eyJvcmlnaW4iOiJodHRwczovL3dlYnBsYXRmb3JtYXBpcy5jb206NDQzIiwiZmVhdHVyZSI6IlBlcmlvZGljQmFja2dyb3VuZFN5bmMiLCJleHBpcnkiOjE1Njg3MDk0MjEsImlzU3ViZG9tYWluIjp0cnVlfQ=="/>
+  <meta http-equiv="origin-trial" content="AkeIEpiEDrr675VSzepeoDtzJXuC7NVje0aeQ/QV+LBjG/xXO1OSHq7+5wNA3zOBvDYqWeAuhwmlV+KMbN8UtQwAAAB2eyJvcmlnaW4iOiJodHRwczovL3dlYnBsYXRmb3JtYXBpcy5jb206NDQzIiwiZmVhdHVyZSI6IlBlcmlvZGljQmFja2dyb3VuZFN5bmMiLCJleHBpcnkiOjE1Njg3MDk0MjEsImlzU3ViZG9tYWluIjp0cnVlfQ==">
   <link rel="stylesheet" type="text/css" href="cats.css">
   <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" rel="stylesheet">
 </head>
@@ -54,16 +54,16 @@
   let gettingCat = false;
   
   toggleSync.addEventListener('click', () => {
-    navigator.serviceWorker.ready.then(registration => {
+    navigator.serviceWorker.ready.then(async registration => {
       try {
         console.log('minInterval being passed is ' + minIntervalFromForm.valueAsNumber);
-        registration.periodicSync.register('get-cats', { minInterval: minIntervalFromForm.valueAsNumber });
+        await registration.periodicSync.register('get-cats', { minInterval: minIntervalFromForm.valueAsNumber });
         // Only change 'Start' to 'Update' if we haven't done it yet.
         if (!toggleSync.classList.contains('active'))
           toggleSync.classList.toggle('active');
       } catch (e) {
-        console.log('Could not register periodic Sync!' + e);
-        window.alert('Could not register periodic Sync! Have you enabled the feature?');
+        console.log('Could not register periodic Sync! ' + e);
+        window.alert('Could not register Periodic Sync! Either the feature is disabled or permission was denied.');
       }
     });
 
