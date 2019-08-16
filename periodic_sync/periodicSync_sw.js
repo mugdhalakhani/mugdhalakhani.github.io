@@ -39,3 +39,7 @@ self.addEventListener('periodicsync', async event => {
 
   event.waitUntil(onPeriodicSync());
 });
+
+self.addEventListener('fetch', () => {
+  return;
+});

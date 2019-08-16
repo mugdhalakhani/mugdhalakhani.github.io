@@ -4,6 +4,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="origin-trial" content="AkeIEpiEDrr675VSzepeoDtzJXuC7NVje0aeQ/QV+LBjG/xXO1OSHq7+5wNA3zOBvDYqWeAuhwmlV+KMbN8UtQwAAAB2eyJvcmlnaW4iOiJodHRwczovL3dlYnBsYXRmb3JtYXBpcy5jb206NDQzIiwiZmVhdHVyZSI6IlBlcmlvZGljQmFja2dyb3VuZFN5bmMiLCJleHBpcnkiOjE1Njg3MDk0MjEsImlzU3ViZG9tYWluIjp0cnVlfQ==">
   <link rel="stylesheet" type="text/css" href="cats.css">
+  <link rel="manifest" href="/webapidemos.webmanifest">
   <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" rel="stylesheet">
 </head>
 
@@ -52,7 +53,7 @@
   const manualSync = document.querySelector('#manual-sync');
   const minIntervalFromForm = document.querySelector('#minInterval');
   let gettingCat = false;
-  
+
   toggleSync.addEventListener('click', () => {
     navigator.serviceWorker.ready.then(async registration => {
       try {
@@ -79,7 +80,7 @@
     if (toggleSync.classList.contains('active'))
       toggleSync.classList.toggle('active');
   });
-  
+
   manualSync.addEventListener('click', async () => {
     if (gettingCat) {
       console.log('Already fetching a cat');
@@ -90,14 +91,14 @@
     await refreshCatImageFromCache();
     gettingCat = false;
   });
-  
+
   catImage.addEventListener('click', async () => {
     console.log('User clicked on the cat image. Will refresh from cache');
     if (gettingCat) {
       console.log('Already fetching a cat');
       return;
     }
-  
+
     gettingCat = true;
     await refreshCatImageFromCache();
     gettingCat = false;
@@ -164,7 +165,7 @@
         console.log('Already fetching a cat');
         return;
       }
-    
+
       gettingCat = true;
       await refreshCatImageFromCache();
       gettingCat = false;

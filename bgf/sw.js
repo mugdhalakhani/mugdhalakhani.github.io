@@ -108,3 +108,7 @@ self.addEventListener('backgroundfetchabort', event => {
                           clients => clients.forEach(
                               client => client.postMessage({eventName, id}))));
 });
+
+self.addEventListener('fetch', () => {
+  return;
+});
