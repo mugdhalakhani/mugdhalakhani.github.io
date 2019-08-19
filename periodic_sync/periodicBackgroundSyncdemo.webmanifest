@@ -19,7 +19,7 @@
             "type": "image/png"
         }
     ],
-    "start_url": "/periodicSync_improved.html",
+    "start_url": "/periodic_sync/periodicSync_improved.html",
     "display": "fullscreen",
     "theme_color": "#B12A34",
     "background_color": "#B12A34"
