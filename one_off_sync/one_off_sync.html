@@ -1,18 +1,16 @@
 <html lang="en">
 <head>
-  <title>Periodic Background Cats</title>
+  <title>Background Cats</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="origin-trial" content="AkeIEpiEDrr675VSzepeoDtzJXuC7NVje0aeQ/QV+LBjG/xXO1OSHq7+5wNA3zOBvDYqWeAuhwmlV+KMbN8UtQwAAAB2eyJvcmlnaW4iOiJodHRwczovL3dlYnBsYXRmb3JtYXBpcy5jb206NDQzIiwiZmVhdHVyZSI6IlBlcmlvZGljQmFja2dyb3VuZFN5bmMiLCJleHBpcnkiOjE1Njg3MDk0MjEsImlzU3ViZG9tYWluIjp0cnVlfQ==">
-  <meta name="theme-color" content="#B12A34"/>
   <link rel="stylesheet" type="text/css" href="cats.css">
   <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" rel="stylesheet">
-  <link rel="manifest" href="periodicBackgroundSyncdemo.webmanifest">
 </head>
 
 <body>
   <header>
     <h1>
-      Periodic Background Cats
+      Background Cats
     </h1>
   </header>
   <main>
@@ -24,73 +22,24 @@
     </figure>
 
     <div class="controls">
-      <div class="top-line">
-        <input type="number" id="minInterval" value="0"><label for="minInterval">ms</label>
-        <button id="toggle-sync">Periodic Sync</button>
-      </div>
       <div class="bottom-line">
         <div class="manual-sync-container">
-          <button id="manual-sync">Sync Manually</button>
-        </div>
-        <div class="cancel-sync-container">
-          <button id="cancel-sync">Cancel Sync</button>
+          <button id="manual-sync">One Off Sync</button>
         </div>
       </div>
     </div>
   </main>
 
-  <footer>
-    <p class="last-cat-update">Never</p>
-    <p class="next-cat-update">Never</p>
-  </footer>
-
   <script src='../utils.js'></script>
   <script>
   const catImage = document.querySelector('.cat-image');
-  const lastCatUpdate = document.querySelector('.last-cat-update');
-  const nextCatUpdate = document.querySelector('.next-cat-update');
-  const toggleSync = document.querySelector('#toggle-sync');
-  const cancelSync = document.querySelector('#cancel-sync');
   const manualSync = document.querySelector('#manual-sync');
   const minIntervalFromForm = document.querySelector('#minInterval');
   let gettingCat = false;
   
-  toggleSync.addEventListener('click', () => {
-    navigator.serviceWorker.ready.then(async registration => {
-      try {
-        console.log('minInterval being passed is ' + minIntervalFromForm.valueAsNumber);
-        await registration.periodicSync.register('get-cats', { minInterval: minIntervalFromForm.valueAsNumber });
-        // Only change 'Start' to 'Update' if we haven't done it yet.
-        if (!toggleSync.classList.contains('active'))
-          toggleSync.classList.toggle('active');
-      } catch (e) {
-        console.log('Could not register periodic Sync! ' + e);
-        window.alert('Could not register Periodic Sync! Either the feature is disabled or permission was denied.');
-      }
-    });
-
-    nextCatUpdate.textContent = "Periodic";
-  });
-
-  cancelSync.addEventListener('click', () => {
-    navigator.serviceWorker.ready.then(registration => {
-      registration.periodicSync.unregister('get-cats');
-    });
-
-    nextCatUpdate.textContent = "Manual";
-    if (toggleSync.classList.contains('active'))
-      toggleSync.classList.toggle('active');
-  });
-  
   manualSync.addEventListener('click', async () => {
-    if (gettingCat) {
-      console.log('Already fetching a cat');
-      return;
-    }
-    gettingCat = true;
-    await updateCatAndTimestamp();
-    await refreshCatImageFromCache();
-    gettingCat = false;
+    const registration = await navigator.serviceWorker.ready;
+    await registration.sync.register('get-one-off-cat');
   });
   
   catImage.addEventListener('click', async () => {
@@ -134,12 +83,6 @@
     try {
       const registration = await navigator.serviceWorker.ready;
       await refreshCatImageFromCache();
-      tags = await registration.periodicSync.getTags();
-      if (tags.includes('get-cats')) {
-        toggleSync.classList.toggle('active');
-        nextCatUpdate.textContent = 'Periodic';
-      }
-
     } catch (e) {
       console.log('Could not update controls ' + e);
     }
@@ -149,12 +92,11 @@
     const url = await getCatImage();
     console.log(`Created objecturl as ${url}`);
     catImage.src = url;
-    lastCatUpdate.textContent = await getTimeStamp();
   }
 
   window.onload = () => {
     console.log('registering SW');
-    navigator.serviceWorker.register('periodicSync_sw.js');
+    navigator.serviceWorker.register('oneOffSync_sw.js');
     updateControls();
   }
 

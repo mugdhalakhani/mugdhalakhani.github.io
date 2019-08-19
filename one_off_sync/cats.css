@@ -1,0 +1,68 @@
+html, body {
+    padding: 0;
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+  }
+  
+  header, footer {
+    max-width: 410px;
+    margin: 0 auto;
+  }
+  
+  header {
+    margin: 30px auto;
+    text-align: center;
+    max-width: 65%;
+  }
+  
+  header h1 {
+    font-weight: 300;
+    font-size: 32px;
+  }
+  
+  figure {
+    margin: 0 auto 50px auto;
+    max-width: 374px;
+  }
+  
+  figcaption {
+    font-size: 12px;
+    color: #929292;
+    text-align: center;
+    max-width: 60%;
+    margin: 0 auto;
+  }
+  
+  .catainer {
+    overflow: hidden;
+    height: 230px;
+    border-radius: 3px;
+    box-shadow: 0 4px 9px 0 rgba(0,0,0,0.23);
+    background: #333;
+    margin-bottom: 25px;
+  }
+  
+  .cat-image {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+  }
+  
+  .controls {
+    padding: 35px 0;
+    background: #F5F5F5;
+    border-top: 1px solid #D5D5D5;
+    border-bottom: 1px solid #D5D5D5;
+    margin-bottom: 25px;
+  }
+  
+  .bottom-line {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  #manual-sync-container {
+    width: 222px;
+  }

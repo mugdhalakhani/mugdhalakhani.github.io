@@ -37,28 +37,13 @@ self.addEventListener('activate', event => {
   event.waitUntil(onActivate());
 });
 
-self.addEventListener('periodicsync', async event => {
-  console.log('periodicsync received for ' + event.tag);
+self.addEventListener('sync', async event => {
+  console.log('sync received for ' + event.tag);
   const onPeriodicSync = async() => {
     await updateCatAndTimestamp();
-    sendMessageToClients('cache-updated', 'Updated the cache upon receiving periodicsync');
+    sendMessageToClients('cache-updated', 'Updated the cache upon receiving sync');
 
   };
 
   event.waitUntil(onPeriodicSync());
-});
-
-self.addEventListener('fetch', event => {
-  if (event.request.mode != 'navigate')
-    return;
-
-  event.respondWith(
-    fetch(event.request)
-        .catch(async () => {
-          return caches.open(CACHE_NAME)
-              .then(cache => {
-                return cache.match('../offline.html');
-              });
-        })
-  );
 });
