@@ -13,6 +13,10 @@ body {
   font-size: x-large;
 }
 
+#child {
+  text-align: center;
+}
+
 h3 {
-  line-height: 10px; 
+  line-height: 10px;
 }
