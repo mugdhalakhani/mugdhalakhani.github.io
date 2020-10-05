@@ -12,3 +12,7 @@ body {
   vertical-align: middle;
   font-size: x-large;
 }
+
+h3 {
+  line-height: 10px; 
+}
